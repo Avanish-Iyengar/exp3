@@ -1,55 +1,25 @@
-pipeline {
-    agent any
-    
-    stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/Avanish-Iyengar/exp3.git'
-            }
-        }
+// Example Jenkinsfile (Declarative Pipeline)
+    pipeline {
+        agent any
 
-        stage('Set up Python') {
-            steps {
-                // Create virtual environment and install dependencies
-                sh '''
-                    python3 -m venv venv
-                    source venv/bin/activate
-                    pip install --upgrade pip
-                    pip install -r requirements.txt
-                '''
+        stages {
+            stage('Build') {
+                steps {
+                    echo 'Building the application...'
+                    // Add your build commands here (e.g., mvn clean install, npm build)
+                }
             }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh '''
-                    source venv/bin/activate
-                    pytest --maxfail=1 --disable-warnings -q
-                '''
+            stage('Test') {
+                steps {
+                    echo 'Running tests...'
+                    // Add your test commands here (e.g., mvn test, npm test)
+                }
             }
-        }
-
-        stage('Lint') {
-            steps {
-                sh '''
-                    source venv/bin/activate
-                    pip install flake8
-                    flake8 .
-                '''
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deployment step (e.g. upload to server, dockerize, etc.)'
+            stage('Deploy') {
+                steps {
+                    echo 'Deploying the application...'
+                    // Add your deployment commands here
+                }
             }
         }
     }
-
-    post {
-        always {
-            junit 'tests/**/*.xml'   // if pytest is configured to generate JUnit XML
-            echo 'Pipeline finished.'
-        }
-    }
-}
